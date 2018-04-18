@@ -1457,16 +1457,29 @@ print('WEB CV QTRR')
 # from os import environ
 # # from web_cong_viec import app
 
+
+
+# if __name__ == '__main__':
+#     app.debug = True
+#     # HOST = environ.get('server_host', '10.62.24.161')
+# ##    NAME = environ.get('server_name','phu.co.tcb.vn:5555')
+#     HOST = environ.get('server_host', 'localhost')
+#     try:
+#         # PORT = int(environ.get('8080', '3000'))
+#         PORT = int(environ.get('server_port', '5599'))
+#     except ValueError:
+#         PORT = 5599
+#     app.run(HOST, PORT, threaded = True)
+
+
+
 if __name__ == '__main__':
-    app.debug = True
-    # HOST = environ.get('server_host', '10.62.24.161')
-##    NAME = environ.get('server_name','phu.co.tcb.vn:5555')
-    HOST = environ.get('server_host', 'localhost')
-    try:
-        # PORT = int(environ.get('8080', '3000'))
-        PORT = int(environ.get('server_port', '5599'))
-    except ValueError:
-        PORT = 5599
-    app.run(HOST, PORT, threaded = True)
+    # Run the app on all available interfaces on port 80 which is the
+    # standard port for HTTP
+    # db.create_all()
 
-
+    port = int(os.environ.get("PORT", 33507))
+    app.run(
+        host="0.0.0.0",
+        port=port,
+    )
