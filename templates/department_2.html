@@ -1,0 +1,296 @@
+{% extends "layout_T.html" %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/content/bootstrap-select.css"/>
+<script type="text/javascript" src="/static/scripts/bootstrap-select.js"></script>
+<style type="text/css">
+	/**{border: 1px solid white}*/
+	.sl_type{ border-radius: 0 ;background-color: #cccccc;color: #262626}
+	.sl_type:hover{color:white;background-color: #4d4d4d}
+	.btn_del,.btn_add,.btn_submit{border:none;outline: none;background-color: transparent;color: #262626}
+	.form-control{border-radius: 0;min-width: 1vw}
+	.job_type{margin-bottom: 0.5vh}
+	.pp_username,.pp_fullname,.pp_mail{width: 10vw;height: 4vh}
+	.sl_type_pp{width: 10vw;height: 4vh;background-color: white;color: #262626}
+	body{color: #262626}
+</style>
+
+
+<form novalidate="novalidate" class="form-inline" method="POST" id="bang1">
+<!-- NOTI -->
+		 {% for i in range(list_noti|length) %}
+		<button type="submit" style="width:100%;height:5vh;border:none;outline:none;display:none" id="btn_f_{{i}}"  name="btn_noti_content" value="{{i}}">{{list_noti[i][1]}}<br>
+			 		<span style="font-size:1.2vh;margin-left:-11vw">{{list_noti[i][2]}}</span>
+			 	</button>
+			 	
+			 	<input type="text" name="noti_id_{{i}}" value="{{list_noti[i][8]}}" style="display:none">
+			 	<input type="text" name="redirect_noti_{{i}}" value="{{list_noti[i][3]}}" style="display:none">
+			 	<input type="text" name="input_noti_{{i}}" value="{{list_noti[i][4]}}" style="display:none">
+		{% endfor %}
+<div style="position:absolute">
+	<!-- TYPE JOB -->
+	<div style="display:inline-block;vertical-align:top">
+			<button type="button" class="btn_add" id="add_0">ADD</button>
+			<button type="submit" class="btn_submit" name="submit_job_type" id="submit_job_type" value="1">SUBMIT</button>
+			<input type="text" name="len_row" id="len_row" style="display:none">
+	</div>
+	<div style="width:75vw;margin:0 auto">
+			<div style="display:inline-block;width:27vw;margin-left:5.9vw">NHÓM CV THEO TRUNG TÂM</div>
+			<div style="display:inline-block;width:16.3vw;">NHÓM CV THEO KHỐI</div>
+			<div style="display:inline-block;width:17.3vw;">NHÓM CV THEO CHIẾN LƯỢC</div>			
+			<div style="display:inline-block;width:1vw;">&nbsp;</div>
+	</div>
+	<div style="width:100vw;text-align: center;height:30vh;overflow-y:scroll">
+		
+		<div style="display:inline-block;width:75vw">
+			<!-- DIV CONTENT -->
+			<div id="div_content" style="display:inline-block">
+			{% for i in range(list_job_type_department|length) %}
+				<div id="div_{{i}}" class="job_type">
+					<div style="display:inline-block;margin-right:6.5vw" >
+						<input type="text"  name="" value="{{list_job_type_department[i][0]}}" class="job_type_department form-control">
+					</div>
+					<div style="display:inline-block" >
+						<select class="selectpicker type" data-style="sl_type" id="type_job_{{i}}" multiple>
+							{% for j in list_type %}
+								<option value="{{j}}" {% if j in list_job_type_department[i][1] %} selected {% endif %}>{{j}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div style="display:inline-block" >
+						<select class="selectpicker type_strategy" data-style="sl_type" id="type_strategy_{{i}}" multiple>
+							{% for r in list_type_strategy %}
+								<option value="{{r}}" {% if r in list_job_type_department[i][2] %} selected {% endif %}>{{r}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<button type="button" id="del_{{i}}" class="btn_del" onclick="del()">DEL</button>
+				</div>
+			{% endfor %}
+			</div>
+			<!-- DIV ADD -->
+			<div id="div_add"></div>
+
+		</div>
+	</div>	<br><br>
+<!-- ĐỐI VỚI VIỆC QUẢN LÝ USER, ANH CHỊ VUI LÒNG GỬI MAIL VỀ: qtrr.aos@techcombank.com.vn -->
+	<!-- PP -->
+	<div style="vertical-align:top">
+			<button type="button" class="btn_add" id="add_pp">ADD</button>
+			<button type="submit" class="btn_submit" name="submit_user" id="submit_user" value="1">SUBMIT</button>
+			<input type="text" name="len_row_user" id="len_row_user" style="display:none">
+	</div>
+	<div style="width:65vw;margin:0 auto">
+			<div style="display:inline-block;width:10vw;margin-left:0.2vw">USERNAME</div>
+			<div style="display:inline-block;width:10vw;">FULLNAME</div>
+			<div style="display:inline-block;width:10vw;">MAILNAME</div>
+			<div style="display:inline-block;width:10vw;">QUẢN LÝ N-1</div>
+			<div style="display:inline-block;width:10vw;">QUẢN LÝ N-2</div>
+			<div style="display:inline-block;width:10vw;">QUẢN LÝ N-3</div>
+			<div style="display:inline-block;width:1vw;">&nbsp;</div>
+
+
+		</div>
+	<div style=";width:100vw;text-align: center;height:30vh;overflow-y:scroll">
+	<!-- {{list_user_in_department}}	 -->
+	<!-- {{list_user_name}} -->
+		
+		<div style="display:inline-block;width:75vw">
+			<!-- DIV CONTENT PP -->
+			<div id="div_content_pp" style="display:inline-block">
+			{% for i in range(list_user_in_department|length) %}
+				<div id="div_pp_{{i}}" class="people">
+					<div style="display:inline-block;" >
+						<input type="text"  value="{{list_user_in_department[i][0]}}" class="pp_username">
+					</div>
+					<div style="display:inline-block;" >
+						<input type="text"  value="{{list_user_in_department[i][1]}}" class="pp_fullname">
+					</div>
+					<div style="display:inline-block;" >
+						<input type="text"  value="{{list_user_in_department[i][2]}}" class="pp_mail">
+					</div>
+					<div style="display:inline-block" >
+						<select class="sl_type_pp"  id="assigner1_{{i}}">
+							{% for r in list_user_name %}
+								<option value="{{r}}" {% if r == list_user_in_department[i][3] %} selected {% endif %}>{{r}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div style="display:inline-block" >
+						<select  class="sl_type_pp"  id="assigner2_{{i}}">
+							{% for r in list_user_name %}
+								<option value="{{r}}" {% if r == list_user_in_department[i][4] %} selected {% endif %}>{{r}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div style="display:inline-block" >
+						<select  class="sl_type_pp"  id="assigner3_{{i}}">
+							{% for r in list_user_name %}
+								<option value="{{r}}" {% if r == list_user_in_department[i][5] %} selected {% endif %}>{{r}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<button type="button" id="del_pp_{{i}}" class="btn_del" onclick="del_pp()">DEL</button>
+				</div>
+			{% endfor %}
+			</div>
+			<!-- DIV ADD PP -->
+			<div id="div_add_pp"></div>
+
+		</div>
+	</div>	
+</div>
+</form>	
+<script type="text/javascript">
+
+var len_div_pp = {{list_pp_department|length}};
+	$('#add_pp').click(function(){
+		if($('.people').length == 0){
+			$('#div_content_pp').css('display','none');
+		}
+		$('#div_add_pp').append('<div id="div_pp_'+len_div_pp+'" class="people">\
+				<div style="display:inline-block;" >\
+					<input type="text"  name="" value="" class="pp_username">\
+				</div>\
+				<div style="display:inline-block;" >\
+					<input type="text"  name="" value="" class="pp_fullname">\
+				</div>\
+				<div style="display:inline-block;" >\
+					<input type="text"  name="" value="" class="pp_mail">\
+				</div>\
+				<div style="display:inline-block">\
+					<select class="sl_type_pp" id="assigner1_'+len_div_pp+'">\
+						{% for i in list_user_name %}\
+						<option value="{{i}}">{{i}}</option>\
+						{% endfor %}\
+					</select>\
+				</div>\
+				<div style="display:inline-block" >\
+					<select class="sl_type_pp"  id="assigner2_'+len_div_pp+'">\
+						{% for i in list_user_name %}\
+							<option value="{{i}}">{{i}}</option>\
+						{% endfor %}\
+					</select>\
+				</div>\
+				<div style="display:inline-block" >\
+					<select class="sl_type_pp"  id="assigner3_'+len_div_pp+'">\
+						{% for i in list_user_name %}\
+							<option value="{{i}}">{{i}}</option>\
+						{% endfor %}\
+					</select>\
+				</div>\
+				<button type="button" class="btn_del" id="del_pp_'+len_div_pp+'" onclick="del_pp()">DEL</button>\
+			</div>');
+		// $('#type_job_'+len_div_pp).selectpicker("refresh");
+		// $('#type_strategy_'+len_div_pp).selectpicker("refresh");
+		len_div_pp += 1;
+	});
+
+function del_pp(){
+	var evt =  event.target.id || event.srcElement.id;
+
+	id_pp = '#div_pp'+ evt.substring(6,evt.length);
+	$(id_pp).remove();
+}
+$('#submit_user').click(function(){
+	name_pp1 = 0;
+	name_pp2 = 0;
+	name_pp3 = 0;
+	name_pp4 = 0;
+	name_pp5 = 0;
+	name_pp6 = 0;
+	$('.pp_username').each(function(){	
+		$(this).attr('name','pp_username_'+ name_pp1);
+		name_pp1 ++;
+	});
+	$('.pp_fullname').each(function(){	
+		$(this).attr('name','pp_fullname_'+ name_pp2);
+		name_pp2 ++;
+	});
+	$('.pp_mail').each(function(){	
+		$(this).attr('name','pp_mail_'+ name_pp3);
+		name_pp3 ++;
+	});
+	$('select[id^="assigner1_"]').each(function(){	
+		$(this).attr('name','assigner1_'+ name_pp4);
+		name_pp4 ++;
+	});
+	$('select[id^="assigner2_"]').each(function(){	
+		$(this).attr('name','assigner2_'+ name_pp5);
+		name_pp5 ++;
+	});
+	$('select[id^="assigner3_"]').each(function(){	
+		$(this).attr('name','assigner3_'+ name_pp6);
+		name_pp6 ++;
+	});
+	$('#len_row_user').val($('.people').length);	
+	// alert($('#len_row_user').val())
+	// alert($('#type_0').val());
+})
+	// alert($('.people').length)
+</script>
+
+
+
+
+
+<script type="text/javascript">
+
+var len_div = {{list_job_type_department|length}};
+	$('#add_0').click(function(){
+		if($('.job_type').length == 0){
+			$('#div_content').css('display','none');
+		}
+		$('#div_add').append('<div id="div_'+len_div+'" class="job_type">\
+				<div style="display:inline-block;margin-right:6.5vw" >\
+					<input type="text"  name="" class="job_type_department form-control">\
+				</div>\
+				<div style="display:inline-block">\
+					<select class="selectpicker" data-style="sl_type" id="type_job_'+len_div+'" multiple>\
+						{% for i in list_type %}\
+						<option value="{{i}}">{{i}}</option>\
+						{% endfor %}\
+					</select>\
+				</div>\
+				<div style="display:inline-block" >\
+					<select class="selectpicker" multiple data-style="sl_type" id="type_strategy_'+len_div+'">\
+						{% for i in list_type_strategy %}\
+							<option value="{{i}}">{{i}}</option>\
+						{% endfor %}\
+					</select>\
+				</div>\
+				<button type="button" class="btn_del" id="del_'+len_div+'" onclick="del()">DEL</button>\
+			</div>');
+		$('#type_job_'+len_div).selectpicker("refresh");
+		$('#type_strategy_'+len_div).selectpicker("refresh");
+		len_div += 1;
+	});
+
+function del(){
+	var evt =  event.target.id || event.srcElement.id;
+	id = '#div_'+ evt.substring(4,evt.length);
+	// alert($('.job_type').length);
+	$(id).remove();
+}
+$('#submit_job_type').click(function(){
+	name1 = 0;
+	name2 = 0;
+	name3 = 0;
+	$('.job_type_department').each(function(){	
+		$(this).attr('name','type_department_'+ name1);
+		name1 ++;
+	});
+	$('select[id^="type_job_"]').each(function(){	
+		$(this).attr('name','type_'+ name2);
+		name2 ++;
+	});
+	$('select[id^="type_strategy_"]').each(function(){	
+		$(this).attr('name','type_strategy_'+ name3);
+		name3 ++;
+	});
+	$('#len_row').val($('.job_type').length);	
+	// alert($('.job_type').length)
+	// alert($('#type_0').val());
+})
+</script>
+{% endblock %}

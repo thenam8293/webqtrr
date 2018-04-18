@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style type="text/css">
+	/**{border:1px solid white;}*/
+	#bar {
+	    width: 10%;
+	    background-color: #901e1d;
+	    text-align: center; /* To center it horizontally (if you want) */
+	    line-height: 2vh; /* To center it vertically */
+	    color: white; 
+	    padding: 0 !important;
+	}
+	.category_bar{
+	    width: 10%;
+	    background-color: #901e1d;
+	    text-align: center;
+	    line-height: 1.5vh; 
+	    color: white; 
+	    padding: 0 !important;
+	}
+	#total_time {line-height: 2vh}
+	td {padding:0;padding-left: 10px;
+    
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: black;font-size: 1.5vh
+	}
+	tr {height: 25px;}
+	button{border:none;outline:none;background-color:transparent;padding:0}
+	.category_right{font-size:120%;width:70%;display:inline-block;color: black;}
+	.category_left{width:30%;display:inline-block;height:5vh}
+	.total_task{height:14vh;padding-left:8px;font-size:170%;font-weight:normal;color: white;}
+	.total_task_detail{height: 4vh;padding-left: 10px;font-size: 1.3vh;color: white;}
+	.table_task_notfinish{overflow-y: scroll;display: inline-block;font-size: 1.7vh;color: white;}
+	.my_title{font-size:2.3vh;width:65vw;margin:0 auto;color:#901e1d;margin-top: 1.5vh;height:2.3vh}
+	.total_task_parent{padding:1vh;width:32.5vw;display:inline-block;}
+	.category_content{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;color: black;font-size: 1.7vh;line-height: 2.5vh}
+	.li_dien> a#bar_intro {background-color:#901E1D !important; font-weight: bold !important; color: white !important; border-bottom: 3px solid #901E1D !important}
+	::-webkit-scrollbar{display: none};
+</style>
+<div style="position:absolute;width:100vw">
+
+<form novalidate="novalidate" class="form-inline" method="POST" id="bang1">
+	
+<!-- WELCOME -->
+	<div style="width:65vw;margin:0 auto;margin-top:1vh;margin-left:17.5vw;height:5vh">
+		<div style="height:10vh;display:inline-block;width:19.5vw;"></div>
+		<div style="height:10vh;display:inline-block;width:32.5vw;margin-left:12.675vw;"></div>
+	</div>
+
+<!-- COUNT -->
+{% if session['username'] in ['tult2','phunq','namht3'] %}
+<div style="color: black;font-size: 20px;position: absolute;">{{last_time}}{{last_user}}</div>
+{% endif %}
+
+<div style="background-image:url(static/images/map7.png); background-size: 100% 100%;width:65vw;margin:0 auto; height:21vh">
+
+		<div style="" class="total_task_parent">
+
+			<div style="" class="total_task"> <span style="font-size:280%" id="task_myself">{{task_myself_finish|length+task_myself_notfinish|length}}</span> công việc tự thực hiện </div>
+			
+			<div style="" class="total_task_detail">
+			{% if task_myself_finish|length == 0 %}
+			Bạn chưa hoàn thành công việc nào.<br><br> 
+			{% else %}
+			<span id="task_myself_finish">{{task_myself_finish|length}}</span> công việc đã hoàn thành <br> <span id="task_myself_notfinish">{{task_myself_notfinish|length}}</span> công việc chưa hoàn thành. 
+			{% endif %}
+			</div>
+		</div><!--  
+	--><div style="" class="total_task_parent">
+			<div style="" class="total_task"><span style="font-size:280%" id="task_assigned">0</span> công việc được giao</div>
+			
+			<div style="" class="total_task_detail">
+
+				<span id="task_assigned_finish">0</span> công việc đã hoàn thành
+				<br> <span id="task_assigned_notfinish">0</span> công việc chưa hoàn thành. 
+			</div>
+
+		</div>
+		<!--  -->
+		
+	</div>
+	<div style="margin-bottom:1vh;" class="my_title">Những công việc chưa hoàn thành</div>
+	<!-- <hr width="65%" style="margin:0 auto;border-top:2px solid #901e1d;margin-bottom:1vh"> -->
+	<!-- TABLE -->
+	<div style="vertical-align:top;font-size:85%;width:65vw;margin:0 auto;">
+			<div style="width:32.5vw;border-right:1px dashed #4d4d4d;;height:50vh" class="table_task_notfinish">
+					<table style="width:100%;">
+						<tbody>
+						{% if task_myself_notfinish == [] %}
+							<tr>
+								<td>Đã hoàn thành các công việc tự thực hiện.</td>
+							</tr>
+						{% endif %}
+						{% for i in task_myself_notfinish %}
+			                <tr style="">
+		 	                    <td  style="min-width:15vw;max-width: 15vw;padding-left:0">
+			                    	<button type="submit" name="go_task" value="{{i[0]}}" style="">{{i[1]}}</button>
+			                    </td>
+			                    <!-- <td style="min-width:2vw;max-width: 2vw">&nbsp;</td> -->
+			                    <td style="min-width:11vw;max-width: 11vw;text-align:right;">{{i[3]}}</td>
+			                    <td style="min-width:5vw;max-width: 5vw;text-align:right;padding-right:15px">{{i[2]}}</td>
+		 	                </tr>
+			         	{% endfor %}			         	
+						</tbody>
+					</table>
+			</div><!-- 
+		 --><div style="width:32.5vw;padding-left:1vw;height:50vh" class="table_task_notfinish">
+		 			<table style="">	
+		 				<tbody>
+		 				{% if task_assigned_notfinish == [] %}
+		 					<tr>
+		 						<td>Đã hoàn thành các công việc được giao.</td>
+		 					</tr>
+		 				{% endif %}
+		 				{% for i in task_assigned_notfinish %}
+		 	                <tr style="">
+		 	                    <td  style="min-width:13.5vw;max-width: 13.5vw;padding-left:0">
+			                    	<button type="submit" name="go_task" value="{{i[0]}}" style="">{{i[1]}}</button>
+			                    </td>
+			                    <td style="min-width:11vw;max-width: 11vw;text-align:right;">{{i[3]}}</td>
+			                    <td style="min-width:4.75vw;max-width: 4.75vw;text-align:right;">{{i[2]}}</td>
+		 	                </tr>
+		 	         	{% endfor %}
+		 				</tbody>
+		 			</table>
+			</div>
+			
+			
+
+</div>
+
+</form>
+</div>
+
+{% endblock %}

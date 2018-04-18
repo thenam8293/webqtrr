@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>W3.CSS</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript" src="static/js/jquery-3.2.1.js"></script>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        <style type="text/css">
+            body {background-color: #f2f2f2}
+            .base {margin-bottom: 5vh;margin-top: 3vh}
+            tr.ds_user:hover, tr.other_user:hover {background-color: #f2f2f2}
+            td {padding: 10px}
+            ul {list-style-type: none}
+            .img {border-radius: 100%;border: 1px dashed black;height: 4em;width: 4em}
+            .giant_div {margin-top: 20vh !important;padding: 10px;margin: auto; border:1px solid lightgrey;border-radius: 6px;width:35%;background-color: #ffffff}
+            #login,#tennguoidung {margin-bottom: 2vh }
+            .name {font-weight: bold}
+            .title {font-size: 140%;font-weight: bold;text-align: left;}
+            .form-control {width: 70%}
+        </style>
+    </head>
+{{ds_user_limit}}
+    <body>
+    <form class="form-inline" method="POST" id="bang1" id="form1">
+        <form>
+            <div class="giant_div">
+                <!-- Danh sach Users -->
+                <div class="w3-display-container mySlides">
+                    <center>
+                        <div class="base">
+                            
+                            <table id="user">
+                                <tr>
+                                    <td colspan="2"><div style="font-weight: bold; color:#901e1d;font-size: 110%">RISK SIGNON GATEWAY</div></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><span class="title">CHOOSE AN ACCOUNT</span></td>
+                                </tr>
+                                {% for i in ds_user_limit %}
+                                <tr class="ds_user" onclick="plusDivs(2)" id="acc_{{i[-1]}}">
+                                    <td><div class="img"></div></td>
+                                    <td class="infor"><span class="name">{{i[1]}}</span><br> <span class="email">{{i[2]}}</span><br></td>
+                                </tr>
+                                {% endfor %}
+                                <tr class="other_user" onclick="plusDivs(1)">
+                                    <td><div class="img"></div></td>
+                                    <td><span>Use another account</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </center>
+                </div>
+                <!-- End Danh sach Users -->
+
+                <!-- Nhap Username -->
+                <div class="w3-display-container mySlides">
+                    <center>
+                        <div class="base">
+                            <div id="login">
+                                <span class="title">SIGN IN</span>
+                            </div>
+                            <div id="mailbox">
+                                <input placeholder="Enter your username" type="mail" name="username" class="form-control" id="username" value="">
+                            </div><br>
+                            <div>
+                                <button class="btn btn-danger" onclick="plusDivs(-1)">Back</button> 
+                                <button type="button" class="btn btn-success" id="next_username" onclick="plusDivs(1)" name="next_username">Next</button>
+                            </div>
+                            
+                        </div>    
+                    </center>
+                </div>
+                <!-- End Nhap Username -->
+
+                <!-- Nhap Password -->
+                <div class="w3-display-container mySlides">
+                    <center>
+                        <div class="base">
+                            <div id="tennguoidung">
+                                <span class="title" id="say_hi"></span>
+                            </div>
+                            <div id="email"></div><br>
+                            <div id="form2">
+                                <div id="form-img1">
+                                    <div style="border-radius: 100%;border: 2px dashed black;height: 6em;width: 6em"></div>
+                                </div>
+                            </div><br>
+                                <div id="password">
+                                    <input type="text" id="usn" name="" value="" style="display: none">
+                                    <input placeholder="Enter your password" type="password" name="password" class="form-control">
+                                </div><br>
+                            <div>
+                                <button class="btn btn-danger" onclick="plusDivs(-2)">Back</button>
+                                <button type="submit" class="btn btn-success" name="sign_in" value="123">Sign In</button>
+                            </div><br>
+                            <div id="quenmatkhau"><a href="#"/>Forgot password?</a></div>
+                        </div>
+                    </center>
+                </div>
+                <!-- End Nhap Password -->
+
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(document).on("click","tr[id^='acc_']",function(){
+                $("#say_hi").html("Hi "+$(this).attr("id").split("_")[1])
+            })
+            $(document).on("click",".ds_user",function(){
+                var values = $(this).find('td').map(function () {
+                    return $(this).text();
+                }).get();
+                console.log(values[1])
+
+                var array = values[1].split(" ");
+                var lastEl = array[array.length-1];
+                var username = lastEl.split("@")[0]
+                $("#username").val(username);
+                $("#usn").val(username);
+                $("#email").html(lastEl);
+            });
+        </script>
+
+        <script type="text/javascript">
+            $(document).on("click","#next_username",function(){
+                alert($('#username').val());
+                {% for i in ds_all_user %}
+                    if ('{{i[0]}}' == $('#username').val()) {
+                        $("#say_hi").val('{{i[3]}}');
+                        $("#email").html('{{i[2]}}');
+                    }
+                    else {
+                        
+                    }
+                {% endfor %}
+            });
+        </script>
+
+        <script>
+            var slideIndex = 1;
+            showDivs(slideIndex);   
+
+            function plusDivs(n) {
+                showDivs(slideIndex += n);
+            }
+
+            function showDivs(n) {
+                var i;
+                var x = document.getElementsByClassName("mySlides");
+                    if (n > x.length) {slideIndex = 1}    
+                    if (n < 1) {slideIndex = x.length}
+                    for (i = 0; i < x.length; i++) {
+                        x[i].style.display = "none";  
+                        }
+                    x[slideIndex-1].style.display = "block";  
+            }
+        </script>
+    </body>
+</html>

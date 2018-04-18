@@ -1,0 +1,379 @@
+{% include "layout_T.html" %}
+    <link rel="icon" href="static/images/download.jpg" />
+    <script type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="static/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/content/bootstrap.min.css" />
+    <!-- BS select  -->
+    <link rel="stylesheet" href="static/css/bootstrap-select.min.css">
+    <script src="static/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="static/css/bootstrap-multiselect.css" type="text/css">
+    <script type="text/javascript" src="static/js/bootstrap-multiselect.js"></script>
+
+	<style type="text/css">
+		body {background-color: #d9d9d9} 
+		th {text-align: center;}
+		div#container {margin-top: 10vh}
+		div#container2 {margin-top: 5vh;margin-bottom: 5vh}
+		.table thead>tr>th, .table tbody>tr>th, .table tfoot>tr>th, .table thead>tr>td, .table tbody>tr>td, .table tfoot>tr>td {padding: 3px}
+		.btn-group {width: 100% !important}
+		.bold {font-weight: bold;}
+		.order {text-align: center;}
+		.btn-delete {width: 40px}
+		.label {font-size: 125%}
+	</style>
+{% block content %}
+
+<form method="POST" id="submit_job_type"> 
+	<div class="container" id="container">
+		<input type="text" name="len_row" id="len_row" style="display:none">
+	    <table id="myTable" class=" table order-list">
+		    <thead>
+		        <tr>
+		        	<th><span class="label label-default">STT</span></th>
+		            <th><span class="label label-default">Nhóm công việc theo trung tâm</span></th>
+		            <th><span class="label label-default">Nhóm công việc theo Khối</span></th>
+		            <th><span class="label label-default">Nhóm công việc theo chiến lược</span></th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		    	{% for i in range(list_job_type_department|length) %}
+			        <tr id="div_{{i}}" class="job_type">
+			        	<td class="col-sm-1">
+			        		<input type="text"  name="" value="{{i+1}}" class="order form-control" disabled="">
+			        	</td>
+			            <td class="col-sm-4">
+			                <input type="text"  name="" value="{{list_job_type_department[i][0]}}" class="job_type_department bold form-control" required="">
+			            </td>
+			            <td class="col-sm-4">
+			                <select id="type_job_{{i}}" class="form-control type" multiple required="">
+			                	{% for j in list_type %}
+			                		<option value="{{j}}" {% if j in list_job_type_department[i][1] %} selected {% endif %}>{{j}}</option>
+			                	{% endfor %}
+			                </select>
+			            </td>
+			            <td class="col-sm-3">
+			                <select id="type_strategy_{{i}}" class="form-control type_strategy" multiple>
+			                	{% for r in list_type_strategy %}
+			                		<option value="{{r}}" {% if r in list_job_type_department[i][2] %} selected {% endif %}>{{r}}</option>
+			                	{% endfor %}
+			                </select>
+			            </td>
+			            <td class="col-sm-1">
+			            	<button type="button" class="ibtnDel btn btn-md btn-danger btn-delete" value=""><span class="glyphicon glyphicon-remove"></span></button>
+			            </td>
+			        </tr>
+			    <script type="text/javascript">
+			        $(document).ready(function() {
+			            $('#type_job_{{i}}').multiselect({
+			                buttonWidth: '15%',
+			                includeSelectAllOption: true,
+			                nonSelectedText: "Nothing selected",
+			                allSelectedText: 'All selected',
+			                onChange: function(element, checked) {
+			                }
+			            });
+			            $('#type_strategy_{{i}}').multiselect({
+			                buttonWidth: '15%',
+			                includeSelectAllOption: true,
+			                nonSelectedText:"Nothing selected",
+			                allSelectedText: 'All selected',
+			                onChange: function(element, checked) {
+			                }
+			            });
+			        });
+			    </script>
+			    {% endfor %}
+		    </tbody>
+		    <tfoot>
+		        <tr>
+		            <td colspan="5">
+	                	<button type="button" class="btn btn-md btn-warning " id="addrow"><span class="glyphicon glyphicon-plus"></span></button>
+	                	<button type="submit" class="btn btn-md btn-primary" name="submit_job_type" id="submit_job_type" value="1"> <span class="glyphicon glyphicon-floppy-saved"></span> </button>	
+		            </td>
+		        </tr>
+		        <tr>
+		        </tr>
+		    </tfoot>
+		</table>
+	</div>
+
+	<div class="container" id="container2">
+		<input type="text" name="len_row_user" id="len_row_user" style="display:none">
+	    <table id="myTable2" class=" table order-list_user">
+		    <thead>
+		        <tr>
+		        	<th><span class="label label-default">STT</span></th>
+		            <th><span class="label label-default">Username</span></th>
+		            <th><span class="label label-default">Full Name</span></th>
+		            <th><span class="label label-default">Mail Name</span></th>
+		            <th><span class="label label-default">N-1</span></th>
+		            <th><span class="label label-default">N-2</span></th>
+		            <th><span class="label label-default">N-3</span></th>
+		            <th><span class="label label-default">Status</span></th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		    	{% for i in range(list_user_in_department|length) %}
+			        <tr id="div_pp_{{i}}" class="people">
+			        	<td class="col-md-1">
+			        		<input type="text"  name="" value="{{i+1}}" class="order form-control" disabled="">
+			        	</td>
+			            <td class="col-md-1">
+			                <input type="text"  name="" value="{{list_user_in_department[i][0]}}" class="pp_username form-control" required>
+			            </td>
+			            <td class="col-md-2">
+			                <input type="text"  name="" value="{{list_user_in_department[i][1]}}" class="pp_fullname bold form-control" required>
+			            </td>
+			            <td class="col-md-3">
+			                <input type="text"  name="" value="{{list_user_in_department[i][2]}}" class="pp_mail form-control" required>
+			            </td>
+			            <td class="col-md-1">
+			            	<select class="form-control" id="assigner1_{{i}}">
+			            		<!-- <option selected disabled>Please select</option> -->
+			            		{% for r in list_user_name %}
+			            			<option value="{{r}}" {% if r == list_user_in_department[i][3] %} selected {% endif %}>{{r}}</option>
+			            		{% endfor %}
+			            	</select>
+			            </td>
+			            <td class="col-md-1">
+			            	<select class="form-control"  id="assigner2_{{i}}">
+			            		<!-- <option selected disabled>Please select</option> -->
+								{% for r in list_user_name %}
+									<option value="{{r}}" {% if r == list_user_in_department[i][4] %} selected {% endif %}>{{r}}</option>
+								{% endfor %}
+							</select>
+			            </td>
+			            <td class="col-md-1">
+			            	<select class="form-control"  id="assigner3_{{i}}">
+			            		<!-- <option selected disabled>Please select</option> -->
+								{% for r in list_user_name %}
+									<option value="{{r}}" {% if r == list_user_in_department[i][5] %} selected {% endif %}>{{r}}</option>
+								{% endfor %}
+							</select>
+			            </td>
+			            <td class="col-md-2">
+			                <select class="form-control"  id="status_{{i}}" style="color: #fff">
+								<option value="enable" {% if 'enable' == list_user_in_department[i][-1] %} selected {% endif %} style="background-color: #fff;color: black">Active</option>
+								<option value="disable" {% if 'disable' == list_user_in_department[i][-1] %} selected {% endif %} style="background-color: #fff;color: black">Deactive</option>
+							</select>
+			            </td>
+			            <td class="col-md-1">
+			            	<button type="button" class="ibtnDel_user btn btn-md btn-danger btn-delete" value="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+			            </td>
+			        </tr>
+			    {% endfor %}
+		    </tbody>
+		    <tfoot>
+		        <tr>
+		            <td colspan="5">
+	                	<button type="button" class="btn btn-md btn-warning " id="addrow_user"><span class="glyphicon glyphicon-plus"></span></button>
+	                	<button type="submit" class="btn btn-md btn-primary" name="submit_user" id="submit_user" value="1"> <span class="glyphicon glyphicon-floppy-saved"></span> </button>
+		            </td>
+		        </tr>
+		        <tr>
+		        </tr>
+		    </tfoot>
+		</table>
+	</div>
+</form>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+	    var len_div = {{list_job_type_department|length}};
+	    	len_div_1 = {{list_job_type_department|length}}+1;
+	    $(document).on("click","#addrow", function () {
+	        var newRow = $('<tr id="div_'+len_div+'" class="job_type">');
+	        var cols = "";
+			cols += '<td><input type="text"  name="" value="'+len_div_1+'" class="order form-control" disabled></td>';
+
+			cols += '<td><input type="text"  name="" class="bold job_type_department form-control" required></td>';
+
+	        cols += '<td><select class="form-control type" id="type_job_'+len_div+'" multiple required>\
+							{% for i in list_type %}\
+								<option value="{{i}}">{{i}}</option>\
+							{% endfor %}\
+						</select>\
+					</td>';
+
+	        cols += '<td><select class="form-control type_strategy" multiple id="type_strategy_'+len_div+'">\
+							{% for i in list_type_strategy %}\
+								<option value="{{i}}">{{i}}</option>\
+							{% endfor %}\
+						</select>\
+					</td>';
+
+	        cols += '<td><button type="button" class="ibtnDel btn btn-md btn-danger btn-delete" value="Delete"><span class="glyphicon glyphicon-remove"></span></button></td>';
+
+	        newRow.append(cols);
+	        $("table.order-list").append(newRow);
+	        $('#type_job_'+len_div).multiselect({
+    	        buttonWidth: '15%',
+    	        includeSelectAllOption: true,
+    	        nonSelectedText: "Nothing selected",
+    	        allSelectedText: 'All selected',
+    	        onChange: function(element, checked) {
+    	        }
+    	    });
+    	    $('#type_strategy_'+len_div).multiselect({
+    	        buttonWidth: '15%',
+    	        includeSelectAllOption: true,
+    	        nonSelectedText:"Nothing selected",
+    	        allSelectedText: 'All selected',
+    	        onChange: function(element, checked) {
+    	        }
+    	    });
+    	    len_div_1 +=1;
+	        len_div+=1;
+
+	    });
+	    $("table.order-list").on("click", ".ibtnDel", function (event) {
+	        $(this).closest("tr").remove();       
+	        len_div -= 1
+	    });
+
+
+	});
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+	    var len_div_pp = {{list_user_in_department|length}};
+	    	len_div_pp_1 = {{list_user_in_department|length}}+1;
+	    $(document).on("click","#addrow_user", function () {
+	        var newRow = $('<tr id="div_pp_'+len_div_pp+'" class="people">');
+	        var cols = "";
+			cols += '<td><input type="text"  name="" value="'+len_div_pp_1+'" class="order form-control" disabled=""></td>';
+
+			cols += '<td><input type="text"  name="" value="" class="form-control pp_username" required></td>';
+
+	        cols += '<td><input type="text"  name="" value="" class="form-control pp_fullname bold" required></td>';
+
+	        cols += '<td><input type="text"  name="" value="" class="form-control pp_mail" required></td>';
+
+	        cols += '<td><select class="form-control" id="assigner1_'+len_div_pp+'">\
+							{% for i in list_user_name %}\
+							<option value="{{i}}">{{i}}</option>\
+							{% endfor %}\
+						</select>\
+					</td>';
+			cols += '<td><select class="form-control" id="assigner2_'+len_div_pp+'">\
+							{% for i in list_user_name %}\
+								<option value="{{i}}">{{i}}</option>\
+							{% endfor %}\
+						</select>\
+					</td>';
+			cols += '<td><select class="form-control" id="assigner3_'+len_div_pp+'">\
+							{% for i in list_user_name %}\
+								<option value="{{i}}">{{i}}</option>\
+							{% endfor %}\
+						</select>\
+					</td>';
+			cols += '<td><select class="form-control" style="color:#fff" id="status_{{i}}">\
+							<option value="enable" style="background-color: #fff;color: black">Active</option>\
+							<option value="disable" style="background-color: #fff;color: black">Deactive</option>\
+						</select>\
+					</td>';
+			cols += '<td><button type="button" class="ibtnDel_user btn btn-md btn-danger btn-delete" value="Delete"><span class="glyphicon glyphicon-remove"></span></button></td>';
+	        newRow.append(cols);
+	        $("table.order-list_user").append(newRow);
+	        $('select[id^="status_"]').change(function () {
+	        	if ($(this).val() != 'enable') {
+	        		$(this).css('background-color', '#d9534f');
+	        	} else {
+	        		$(this).css('background-color', '#4cae4c');
+	        	}
+	        }).trigger('change');
+	        len_div_pp+=1;
+	        len_div_pp_1 +=1;
+	    });
+	    $("table.order-list_user").on("click", ".ibtnDel_user", function (event) {
+	        $(this).closest("tr").remove();       
+	        len_div_pp -= 1;
+	    });
+
+
+	});
+</script>
+
+
+
+<script type="text/javascript">
+	$('#submit_user').click(function(){
+		name_pp1 = 0;
+		name_pp2 = 0;
+		name_pp3 = 0;
+		name_pp4 = 0;
+		name_pp5 = 0;
+		name_pp6 = 0;
+		name_pp7 = 0;
+		$('.pp_username').each(function(){	
+			$(this).attr('name','pp_username_'+ name_pp1);
+			name_pp1 ++;
+		});
+		$('.pp_fullname').each(function(){	
+			$(this).attr('name','pp_fullname_'+ name_pp2);
+			name_pp2 ++;
+		});
+		$('.pp_mail').each(function(){	
+			$(this).attr('name','pp_mail_'+ name_pp3);
+			name_pp3 ++;
+		});
+		$('select[id^="assigner1_"]').each(function(){	
+			$(this).attr('name','assigner1_'+ name_pp4);
+			name_pp4 ++;
+		});
+		$('select[id^="assigner2_"]').each(function(){	
+			$(this).attr('name','assigner2_'+ name_pp5);
+			name_pp5 ++;
+		});
+		$('select[id^="assigner3_"]').each(function(){	
+			$(this).attr('name','assigner3_'+ name_pp6);
+			name_pp6 ++;
+		});
+		$('select[id^="status_"]').each(function(){	
+			$(this).attr('name','status_'+ name_pp7);
+			name_pp7 ++;
+		});
+		$('#len_row_user').val($('.people').length);	
+	});
+</script>
+<script type="text/javascript">
+	$('#submit_job_type').click(function(){
+		name1 = 0;
+		name2 = 0;
+		name3 = 0;
+		$('.job_type_department').each(function(){	
+			$(this).attr('name','type_department_'+ name1);
+			name1 ++;
+		});
+		$('select[id^="type_job_"]').each(function(){	
+			$(this).attr('name','type_'+ name2);
+			name2 ++;
+		});
+		$('select[id^="type_strategy_"]').each(function(){	
+			$(this).attr('name','type_strategy_'+ name3);
+			name3 ++;
+		});
+		$('#len_row').val($('.job_type').length);	
+
+	});
+</script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('select[id^="status_"]').change(function () {
+			if ($(this).val() != 'enable') {
+				$(this).css('background-color', '#d9534f');
+			} else {
+				$(this).css('background-color', '#4cae4c');
+			}
+		}).trigger('change');
+	});
+</script>
+{% endblock %}
+
+
+
+
+
+
+
